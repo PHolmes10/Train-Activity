@@ -49,12 +49,37 @@ database.ref().on("child_added", function (childSnapshot) {
     console.log(firstTrain);
     console.log(frequency);
 
+    // var frequencyMinutes = moment.unix(frequency).format('m');
+    // console.log(frequencyMinutes);
+    var firstTrainConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    console.log(firstTrainConverted);
+
+    var currentTime = moment();
+    console.log("current time is: " + moment(currentTime).format("hh:mm"));
+
+    var diffTime = moment().diff(moment(firstTrainConverted), "minutes");
+    console.log("Difference in time: " + diffTime);
+
+    var tRemainder = diffTime % frequency;
+    console.log(tRemainder);
+
+    var minutesUntilTrain = frequency - tRemainder;
+    console.log("Minutes until train: " + minutesUntilTrain);
+
+    var nextTrain = moment().add(minutesUntilTrain, "minutes");
+    console.log("arrival time: " + moment(nextTrain).format("hh:mm a"));
+
+    nextTrain = moment(nextTrain).format("hh:mm a");
+
+    // var firstTrainPretty = moment.unix(firstTrain).format("HH:mm");
+    // console.log(firstTrainPretty);
 
     var newRow = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(destination),
-        $("<td>").text(firstTrain),
         $("<td>").text(frequency),
+        $("<td>").text(nextTrain),
+        $("<td>").text(minutesUntilTrain)
     );
 
     $("#train-table > tbody").append(newRow);
